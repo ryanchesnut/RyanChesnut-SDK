@@ -22,7 +22,6 @@ export const get = async ({
       headers,
       mode,
     } as RequestInit);
-    console.log(res.status);
     if (res.status === 200) {
       let json = await res.json();
       return json as Promise<any>;

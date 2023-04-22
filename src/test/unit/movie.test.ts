@@ -1,48 +1,49 @@
-// getAllLotrMovies.test.ts
+import { getAllLotrMovies, getOneLotrMovie } from "../../services/index";
+import { LotrSDK } from "../../core/setup";
+import { MovieListResponse } from "../../types/Movie";
+import { get } from "../../utils/request";
+import { mockMovies } from "./mockMovie";
 
-// import { get } from "@utils/index";
-// import { LotrSDK } from "@core/setup";
-// import { baseUrl } from "@constants/config";
-// import { getAllLotrMovies } from "@services/index";
+jest.mock("../../utils/request");
 
-jest.mock("@utils/index");
+describe("getAllLotrMovies", () => {
+  const setup: LotrSDK = new LotrSDK("my-api-key", "v1");
 
-// describe("getAllLotrMovies", () => {
-//   const apiKey = "testApiKey";
-//   const version = "v2";
-//   const setup = new LotrSDK(apiKey, version);
+  it("should throw an error if no setup is provided", async () => {
+    await expect(getAllLotrMovies(undefined, null)).rejects.toThrowError(
+      "No setup found"
+    );
+  });
 
-//   afterEach(() => {
-//     jest.clearAllMocks();
-//   });
+  it("should call get with the correct URL and headers", async () => {
+    const queryParams = { limit: 10, page: 1 };
+    const expectedUrl = "https://the-one-api.dev/v1/movie?limit=10&page=1";
+    const expectedHeaders = { Authorization: "Bearer my-api-key" };
+    const expectedResponse: MovieListResponse = mockMovies as MovieListResponse;
+    (get as jest.MockedFunction<typeof get>).mockResolvedValue(
+      expectedResponse
+    );
 
-//   it("should call request.get with the correct URL and headers", async () => {
-//     const mockGet = jest
-//       .spyOn(request, "get")
-//       .mockResolvedValueOnce({ data: [] });
-//     const queryParams = { limit: 10, page: 1 };
-//     const expectedUrl = `${baseUrl}/${version}/movies?limit=${queryParams.limit}&page=${queryParams.page}`;
+    const result = await getAllLotrMovies(setup, queryParams);
 
-//     await getAllLotrMovies(setup, queryParams);
+    expect(get).toHaveBeenCalledWith({
+      url: expectedUrl,
+      headers: expectedHeaders,
+    });
+    expect(result).toEqual(expectedResponse);
+  });
+});
 
-//     expect(mockGet).toHaveBeenCalledWith({
-//       url: expectedUrl,
-//       headers: { Authorization: `Bearer ${apiKey}` },
-//     });
-//   });
+describe("getOneLotrMovie", () => {
+  const mockMovieId = "5cd95395de30eff6ebccde5a";
+  (global as any).fetch = jest.fn();
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
 
-//   it("should call request.get with the correct URL and headers when queryParams is null", async () => {
-//     const mockGet = jest
-//       .spyOn(request, "get")
-//       .mockResolvedValueOnce({ data: [] });
-//     const queryParams = null;
-//     const expectedUrl = `${baseUrl}/${version}/movies`;
-
-//     await getAllLotrMovies(setup, queryParams);
-
-//     expect(mockGet).toHaveBeenCalledWith({
-//       url: expectedUrl,
-//       headers: { Authorization: `Bearer ${apiKey}` },
-//     });
-//   });
-// });
+  it("should throw an error if no setup object is provided", async () => {
+    await expect(getOneLotrMovie(undefined, mockMovieId)).rejects.toThrow(
+      "No setup found"
+    );
+  });
+});
