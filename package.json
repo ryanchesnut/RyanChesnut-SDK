@@ -1,6 +1,6 @@
 {
   "name": "rchesnut-lotr-sdk",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Lord of the Rings SDK",
   "main": "./dist/cjs/src/index.js",
   "module": "./dist/esm/src/index.js",
