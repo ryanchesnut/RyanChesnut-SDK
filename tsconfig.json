@@ -1,0 +1,32 @@
+{
+    "compilerOptions": {
+      "resolveJsonModule": true, 
+      "moduleResolution": "node",
+      "noUnusedLocals": true,
+      "noUnusedParameters": true,
+      "removeComments": true,
+      "sourceMap": true,
+      "target": "es5",
+      "module": "CommonJS",
+      "outDir": "dist/esm", 
+      "esModuleInterop": true, 
+      "baseUrl": ".",
+      "paths": {
+        "@services/*": ["src/services/*"],
+        "@types/*": ["src/types/*"], 
+        "@utils/*": ["src/utils/*"], 
+        "@constants/*": ["src/constants/*"], 
+        "@core/*": ["src/core/*"]
+      }     
+    },
+    "include": ["src/**/*.ts", "package.json"],
+    "exclude": [
+      "node_modules/**/*",
+      "examples/**",
+      ".vscode/**/*"
+    ],
+    "ts-node": {
+      "require": ["tsconfig-paths/register"]
+    }
+  }
+  
